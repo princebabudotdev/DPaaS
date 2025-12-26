@@ -8,21 +8,41 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: function(){
+      return !this.githubId && !this.googleId;
+    },
     unique: true,
+    trim:true,
+    select: true,
   },
   username: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId && !this.githubId;
+    },
     unique: true,
+    sparse:true
   },
   password: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId && !this.githubId ;
+    }, // not required if using google auth
+    select: true,
   },
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  githubId: {
+    type: String,
+    unique: true,
+    sparse: true,
   },
   updatedAt: {
     type: Date,
@@ -32,9 +52,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  profilePic: {
+  avatar: {
     type: String,
     default: null,
+  },
+  bio: {
+    type: String,
   },
   role: {
     type: String,
@@ -65,6 +88,9 @@ userSchema.pre("save", async function () {
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
+
+
+
 
 const User = mongoose.model("User", userSchema);
 export default User;

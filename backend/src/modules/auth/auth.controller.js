@@ -1,4 +1,5 @@
 import config from "../../config/config.js";
+import ApiError from "../../utils/appError.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import generateAccessToken from "../../utils/generateAccessToken.js";
 import genarateRefreshToken from "../../utils/generateRefreshToken.js";
@@ -108,9 +109,104 @@ const updateProfile = asyncHandler(async (req, res) => {
   });
 });
 
+const googleCallback = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      message: "Authentication failed",
+    });
+  }
+
+  // generate Tokens
+
+  const accessToken = generateAccessToken({
+    email: user.email,
+    userid: user._id,
+    username: user.username || user.name,
+  });
+
+  const refreshToken = await genarateRefreshToken({
+    email: null,
+    userid: user._id,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: config.NODE_ENV === "production", // Secure in production
+    sameSite: "none",
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  });
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: config.NODE_ENV === "production", // Secure in production,
+    sameSite: "none",
+    maxAge: 60 * 60 * 1000, // 1 hour
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Authentication successful",
+    user: {
+      id: user._id,
+      name: user.fullname || user.username,
+      email: user.email,
+    },
+  });
+});
+
+const githubCallback = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    throw new ApiError(404, "User not founded");
+  }
+
+  // generate Tokens
+
+  const accessToken = generateAccessToken({
+    email: user.email || null,
+    userid: user._id,
+    username: user.username || user.name,
+  });
+
+  const refreshToken = await genarateRefreshToken({
+    email: null,
+    userid: user._id,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: config.NODE_ENV === "production", // Secure in production
+    sameSite: "none",
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  });
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: config.NODE_ENV === "production", // Secure in production,
+    sameSite: "none",
+    maxAge: 60 * 60 * 1000, // 1 hour
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Authentication successful",
+    user: {
+      id: user._id,
+      name: user.fullname || user.username,
+      email: user.email,
+    },
+  });
+});
+
 export default {
   register,
   login,
   forgotPassword,
   updateProfile,
+  googleCallback,
+  githubCallback,
 };

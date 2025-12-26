@@ -1,8 +1,10 @@
 import express from "express";
 import http from "http";
-import CookieParser from 'cookie-parser'
-import helmet from 'helmet'
+import CookieParser from "cookie-parser";
+import helmet from "helmet";
 
+// import passport from "passport";
+import passport from './config/passport.js'
 
 // general-rate-limter
 import { generalRateLimiter } from "./middlewares/rateLimter.Middleware.js";
@@ -11,23 +13,18 @@ import { generalRateLimiter } from "./middlewares/rateLimter.Middleware.js";
 export const app = express();
 const httpServer = http.createServer(app);
 
-
-
 // Additional middleware and route configurations can be added here
 app.use(express.json());
 app.use(CookieParser());
 app.use(helmet());
 app.use(generalRateLimiter);
-
-
+app.use(passport.initialize());
 
 // route handlers can be added here
-import authRoutes from './modules/auth/auth.route.js'
+import authRoutes from "./modules/auth/auth.route.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 
-
-app.use("/api/auth" ,  authRoutes);
-
+app.use("/api/auth", authRoutes);
 
 // error middleware
 app.use(errorMiddleware);

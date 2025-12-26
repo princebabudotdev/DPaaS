@@ -1,18 +1,42 @@
 import ApiError from "../../utils/appError.js";
+import { sendEmail } from "../../utils/sendEmail.js";
 import authDao from "./auth.dao.js";
 
 const registerUser = async (userdata) => {
-  const existingemail = await authDao.findByEmail(userdata.email);
-  if (existingemail) {
-    throw new Error("Email already in use");
+  if (userdata.email) {
+    const existingemail = await authDao.findByEmail(userdata.email);
+    if (existingemail) {
+      throw new Error("Email already in use");
+    }
   }
 
-  const newUser = await authDao.createUser({
+  const userPayLoad = {
     fullname: userdata.fullname,
-    email: userdata.email,
     username: userdata.username,
+    email: userdata.email,
     password: userdata.password,
-  });
+  };
+
+  // add only if present
+
+  if (userdata.googleId) {
+    userPayLoad.googleId = userdata.googleId;
+  }
+
+  if (userdata.githubId) {
+    userPayLoad.githubId = userdata.githubId;
+  }
+
+  const newUser = await authDao.createUser(userPayLoad);
+
+  // await sendEmail({
+  //   to: newUser.email,
+  //   subject: "Welcome to DPaaS 🎉",
+  //   html: `
+  //     <h2>Welcome ${newUser.fullname}</h2>
+  //     <p>Your account has been created successfully.</p>
+  //   `,
+  // });
 
   newUser.password = undefined; // Hide password before returning
   return newUser;

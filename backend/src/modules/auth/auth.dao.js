@@ -16,8 +16,23 @@ const findById = async (id, feild) => {
   return await User.findById(id);
 };
 
+const findByGoogleId = async (googleId) => {
+  return await User.findOne({ googleId });
+};
+
+const findByGithubId = async (githubId) => {
+  return await User.findOne({githubId});
+}
+
+const findByUsername = async (username) => {
+  return await User.findOne({username})
+}
+
 export default {
   createUser,
   findByEmail,
   findById,
+  findByGoogleId,
+  findByGithubId,
+  findByUsername
 };
