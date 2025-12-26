@@ -37,14 +37,13 @@ const register = asyncHandler(async (req, res) => {
     success: true,
     data: user,
   });
-
 });
 
-const login = asyncHandler(async (req , res) => {
-  const {email , password} = req.body
-  const {user} = await authService.loginUser(email , password);
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  const { user } = await authService.loginUser(email, password);
 
-   const refreshToken = genarateRefreshToken({
+  const refreshToken = genarateRefreshToken({
     email: user.email,
     id: user._id,
     username: user.username,
@@ -73,13 +72,45 @@ const login = asyncHandler(async (req , res) => {
   res.status(200).json({
     user,
     refreshToken,
-    accessToken
-  })
+    accessToken,
+  });
+});
 
-})
+const forgotPassword = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const { newPassword, oldPassword } = req.body;
 
+  const updatedUser = await authService.forgotPasswordUser(
+    oldPassword,
+    newPassword,
+    user.email
+  );
+
+  return res.status(201).json({
+    message: "Password updated sucessfully",
+    user: updatedUser,
+  });
+});
+
+const updateProfile = asyncHandler(async (req, res) => {
+  const { email } = req.user;
+  const { fullname, username, location } = req.body;
+  const updateUser = await authService.updateProfileUser({
+    email,
+    fullname,
+    username,
+    location,
+  });
+
+  return res.status(201).json({
+    message: "Profile updated sucessfully",
+    updateUser,
+  });
+});
 
 export default {
-    register,
-    login
-}
+  register,
+  login,
+  forgotPassword,
+  updateProfile,
+};

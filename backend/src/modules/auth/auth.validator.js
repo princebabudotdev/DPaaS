@@ -36,16 +36,46 @@ const registerValidator = [
     .withMessage("Full name contains invalid characters"),
 ];
 
-
 const loginValidator = [
-  body("email").notEmpty().withMessage("Email is required").isEmail().withMessage("Email address is Invalid")
-  .isLength({min:5 , max:30}).withMessage("Email must be 5 letters to 30 letters").matches(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/)
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Email address is Invalid")
+    .isLength({ min: 5, max: 30 })
+    .withMessage("Email must be 5 letters to 30 letters")
+    .matches(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/)
     .withMessage("Email format is incorrect"),
-    body("password").notEmpty().withMessage("Password is required").isLength({min:8 , max:30}).withMessage("Password must be contain 8 to 30 characters")
-]
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 8, max: 30 })
+    .withMessage("Password must be contain 8 to 30 characters"),
+];
 
+const forgotPasswordValidator = [
+  body("oldPassword")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 8, max: 30 })
+    .withMessage("Password must be at least 8 characters"),
+  body("newPassword")
+    .notEmpty()
+    .withMessage("Password is Required")
+    .isLength({ min: 8, max: 30 })
+    .withMessage("Password must be at least 8 characters")
+    .matches(/[A-Z]/)
+    .withMessage("Password must contain at least one uppercase letter")
+    .matches(/[a-z]/)
+    .withMessage("Password must contain at least one lowercase letter")
+    .matches(/\d/)
+    .withMessage("Password must contain at least one number")
+    .matches(/[@$!%*?&]/)
+    .withMessage("Password must contain at least one special character"),
+];
 
-export default { 
-     registerValidator,
-     loginValidator
+export default {
+  registerValidator,
+  loginValidator,
+  forgotPasswordValidator,
 };
