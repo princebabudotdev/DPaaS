@@ -21,12 +21,24 @@ const findByGoogleId = async (googleId) => {
 };
 
 const findByGithubId = async (githubId) => {
-  return await User.findOne({githubId});
-}
+  return await User.findOne({ githubId });
+};
 
 const findByUsername = async (username) => {
-  return await User.findOne({username})
-}
+  return await User.findOne({ username });
+};
+
+const findByCustomData = async ({
+  email,
+  resetPasswordOTP,
+  resetPasswordOTPExpiry,
+}) => {
+  return await User.findOne({
+    email,
+    resetPasswordOTP,
+    resetPasswordOTPExpiry,
+  });
+};
 
 export default {
   createUser,
@@ -34,5 +46,6 @@ export default {
   findById,
   findByGoogleId,
   findByGithubId,
-  findByUsername
+  findByUsername,
+  findByCustomData,
 };

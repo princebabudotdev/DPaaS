@@ -74,8 +74,41 @@ const forgotPasswordValidator = [
     .withMessage("Password must contain at least one special character"),
 ];
 
+
+const resetPasswordValidator = [
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Invalid email address")
+    .isLength({ max: 50, min: 5 })
+    .withMessage("Email is too long")
+    .matches(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/)
+    .withMessage("Email format is incorrect"),
+    body("newPassword")
+    .notEmpty()
+    .withMessage("Password is Required")
+    .isLength({ min: 8, max: 30 })
+    .withMessage("Password must be at least 8 characters")
+    .matches(/[A-Z]/)
+    .withMessage("Password must contain at least one uppercase letter")
+    .matches(/[a-z]/)
+    .withMessage("Password must contain at least one lowercase letter")
+    .matches(/\d/)
+    .withMessage("Password must contain at least one number")
+    .matches(/[@$!%*?&]/)
+    .withMessage("Password must contain at least one special character"),
+    body("otp")
+    .notEmpty()
+    .withMessage("OTP is required")
+    .isLength({min:6,max:6})
+    .withMessage("OTP must be 6 digits only")
+
+]
+
 export default {
   registerValidator,
   loginValidator,
   forgotPasswordValidator,
+  resetPasswordValidator
 };

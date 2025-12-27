@@ -2,22 +2,21 @@ import nodemailer from "nodemailer";
 import config from "./config.js";
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: config.EMAIL_HOST,
+  port: config.EMAIL_PORT,
+  secure: false,
   auth: {
-    type: "OAUTH2",
     user: config.GOOGLE_EMAIL_USER,
-    clientId: config.GOOGLE_CLIENT_ID,
-    clientSecret: config.GOOGLE_CLIENT_SECRET,
-    refreshToken: config.GOOGLE_REFRESH_TOKEN,
+    pass: config.EMAIL_PASS,
   },
 });
 
-// transporter.verify((error, success) => {
-//   if (error) {
-//     console.error("Error connecting to email server:", error);
-//   } else {
-//     console.log("Email server is ready to send messages");
-//   }
-// });
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("Error connecting to email server:", error);
+  } else {
+    console.log("Email server is ready to send messages");
+  }
+});
 
 export default transporter;

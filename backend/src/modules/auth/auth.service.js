@@ -1,6 +1,8 @@
 import ApiError from "../../utils/appError.js";
+import { generateOTP, hashOTP } from "../../utils/otp.js";
 import { sendEmail } from "../../utils/sendEmail.js";
 import authDao from "./auth.dao.js";
+import crypto from "crypto";
 
 const registerUser = async (userdata) => {
   if (userdata.email) {
@@ -29,14 +31,14 @@ const registerUser = async (userdata) => {
 
   const newUser = await authDao.createUser(userPayLoad);
 
-  // await sendEmail({
-  //   to: newUser.email,
-  //   subject: "Welcome to DPaaS 🎉",
-  //   html: `
-  //     <h2>Welcome ${newUser.fullname}</h2>
-  //     <p>Your account has been created successfully.</p>
-  //   `,
-  // });
+  await sendEmail({
+    to: newUser.email,
+    subject: "Welcome to DPaaS 🎉",
+    html: `
+      <h2>Welcome ${newUser.fullname}</h2>
+      <p>Your account has been created successfully.</p>
+    `,
+  });
 
   newUser.password = undefined; // Hide password before returning
   return newUser;
@@ -92,10 +94,66 @@ const updateProfileUser = async ({ email, fullname, username, location }) => {
   return user;
 };
 
+
+
+
+// add more feature and sequrity 
+
+const forgotPasswordSendOtpUser = async (email) => {
+  const user = await authDao.findByEmail(email);
+
+  if (!user) {
+    throw new ApiError(404, "Email not not found please enter a email");
+  }
+
+  const { otp, hashedOTP, expiresAt } = generateOTP();
+
+  user.resetPasswordOTP = hashedOTP;
+  user.resetPasswordOTPExpiry = expiresAt;
+
+  await user.save();
+
+  await sendEmail({
+    to: user.email,
+    subject: "Reset Password Otp",
+    html: `
+      <h2>Password Reset</h2>
+      <p>Your OTP is:</p>
+      <h3>${otp}</h3>
+      <p>Valid for 10 minutes</p>
+    `,
+  });
+
+  return { message: "OTP sent to email" };
+};
+
+const resetPasswordVerifyOtpUser = async (email, otp, newPassword) => {
+  const user = await authDao.findByCustomData({
+    email,
+    resetPasswordOTP: hashOTP(otp),
+    resetPasswordOTPExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return { message: "If the email exists, OTP has been sent" };
+  }
+
+  ((user.password = newPassword || user.password),
+    (user.resetPasswordOTP = undefined),
+    (user.resetPasswordOTPExpiry = undefined));
+  await user.save();
+
+  return {
+    message: "Password reset sucessfully please Login in DPaaS",
+  };
+};
+
 export default {
   registerUser,
   loginUser,
   getMe,
   forgotPasswordUser,
   updateProfileUser,
+  forgotPasswordSendOtpUser,
+  resetPasswordVerifyOtpUser,
 };

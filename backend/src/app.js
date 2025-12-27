@@ -24,7 +24,7 @@ app.use(passport.initialize());
 import authRoutes from "./modules/auth/auth.route.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth",  authRoutes);
 
 // error middleware
 app.use(errorMiddleware);

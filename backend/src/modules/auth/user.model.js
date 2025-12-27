@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { type } from "os";
 
 const userSchema = new mongoose.Schema({
   fullname: {
@@ -8,11 +9,11 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: function(){
+    required: function () {
       return !this.githubId && !this.googleId;
     },
     unique: true,
-    trim:true,
+    trim: true,
     select: true,
   },
   username: {
@@ -21,12 +22,12 @@ const userSchema = new mongoose.Schema({
       return !this.googleId && !this.githubId;
     },
     unique: true,
-    sparse:true
+    sparse: true,
   },
   password: {
     type: String,
     required: function () {
-      return !this.googleId && !this.githubId ;
+      return !this.googleId && !this.githubId;
     }, // not required if using google auth
     select: true,
   },
@@ -77,6 +78,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  resetPasswordOTP: {
+    type: String,
+  },
+  resetPasswordOTPExpiry: {
+    type: Date,
+  },
+  resetPasswordOTPAttempt:{
+    type:Number,
+    default:0
+  }
 });
 
 userSchema.pre("save", async function () {
@@ -88,9 +99,6 @@ userSchema.pre("save", async function () {
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
-
-
-
 
 const User = mongoose.model("User", userSchema);
 export default User;

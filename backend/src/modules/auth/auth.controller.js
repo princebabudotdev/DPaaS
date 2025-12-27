@@ -202,6 +202,34 @@ const githubCallback = asyncHandler(async (req, res) => {
   });
 });
 
+const forgotPasswordSendOTP = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ApiError(400, "Email is required");
+  }
+  await authService.forgotPasswordSendOtpUser(email);
+
+  return res.status(200).json({
+    message: "OTP Send to your email",
+  });
+});
+
+const resetPasswordVerifyOtp = asyncHandler(async (req, res) => {
+  const { newPassword, otp, email } = req.body;
+
+  if(!email || !otp || !newPassword){
+    throw new Error(401 , "Email otp and new Password is required")
+  }
+
+  const {message} = await authService.resetPasswordVerifyOtpUser(email, otp, newPassword);
+
+  res.status(200).json({
+    message
+  })
+
+});
+
 export default {
   register,
   login,
@@ -209,4 +237,6 @@ export default {
   updateProfile,
   googleCallback,
   githubCallback,
+  forgotPasswordSendOTP,
+  resetPasswordVerifyOtp
 };

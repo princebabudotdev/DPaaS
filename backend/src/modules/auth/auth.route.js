@@ -24,6 +24,8 @@ router.route("/test").get(protect, async (req, res) => {
   res.send(user);
 });
 
+// forgot passwords
+
 router
   .route("/forgotPassword")
   .put(
@@ -34,6 +36,17 @@ router
 
 router.route("/updateProfile").put(protect, authController.updateProfile);
 
+router
+  .route("/forgotPassword/sendOtp")
+  .post(authController.forgotPasswordSendOTP);
+
+router
+  .route("/resetPassword/verifyOtp")
+  .post(
+    validate(authValidator.resetPasswordValidator),
+    authController.resetPasswordVerifyOtp
+  );
+
 // google auth routes here
 
 router.route("/google").get(
@@ -43,26 +56,26 @@ router.route("/google").get(
 );
 
 router.route("/google/callback").get(
-  passport.authenticate("google", {  // this url send the user to the googleCallback controller
+  passport.authenticate("google", {
+    // this url send the user to the googleCallback controller
     failureRedirect: "/login-failed", //Redirect to failure page if authentication fails
     session: false,
   }),
   authController.googleCallback
 );
 
+// github OAuth routes here
 
-// github OAuth routes here 
-
-router.route("/github").get(
-  passport.authenticate("github" , {scope : ["user:email" , "read:user"]})
-)
+router
+  .route("/github")
+  .get(passport.authenticate("github", { scope: ["user:email", "read:user"] }));
 
 router.route("/github/callback").get(
-  passport.authenticate("github" , {
-    session:false,
-    failureRedirect:"/login-failed"
+  passport.authenticate("github", {
+    session: false,
+    failureRedirect: "/login-failed",
   }),
   authController.githubCallback
-)
+);
 
 export default router;
