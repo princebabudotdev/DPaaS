@@ -9,10 +9,7 @@ export const generateOTP = (length = 6, expiryMinutes = 10) => {
 
   const otp = crypto.randomInt(min, max + 1).toString();
 
-  const hashedOTP = crypto
-    .createHash("sha256")
-    .update(otp)
-    .digest("hex");
+  const hashedOTP = crypto.createHash("sha256").update(otp).digest("hex");
 
   const expiresAt = Date.now() + expiryMinutes * 60 * 1000;
 
@@ -23,15 +20,9 @@ export const generateOTP = (length = 6, expiryMinutes = 10) => {
   };
 };
 
-
-
-
 /**
  * Hash OTP for comparison
  */
 export const hashOTP = (otp) => {
-  return crypto
-    .createHash("sha256")
-    .update(String(otp))
-    .digest("hex");
+  return crypto.createHash("sha256").update(String(otp)).digest("hex");
 };

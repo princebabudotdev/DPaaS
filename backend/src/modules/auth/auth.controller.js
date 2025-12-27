@@ -95,12 +95,16 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
 const updateProfile = asyncHandler(async (req, res) => {
   const { email } = req.user;
-  const { fullname, username, location } = req.body;
+  const { fullname, username, location , bio , skills , SocialLinks } = req.body;
   const updateUser = await authService.updateProfileUser({
     email,
     fullname,
     username,
     location,
+    skills,
+    bio,
+    SocialLinks
+
   });
 
   return res.status(201).json({

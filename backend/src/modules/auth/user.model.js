@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { type } from "os";
+
 
 const userSchema = new mongoose.Schema({
   fullname: {
@@ -27,9 +27,10 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: function () {
-      return !this.googleId && !this.githubId;
+      if(!this.isNew) return false
+      return !this.googleId && !this.githubId ;
     }, // not required if using google auth
-    select: true,
+    select: false,
   },
   createdAt: {
     type: Date,
@@ -73,7 +74,20 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  SocialLinks: [],
+  SocialLinks: [
+   {
+    tittle:{
+      type:String
+    },
+    url:{
+      type:String,
+    }
+   }
+  ],
+  skills:{
+    type:[String],
+    default:[]
+  },
   location: {
     type: String,
     default: null,
@@ -83,6 +97,9 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordOTPExpiry: {
     type: Date,
+  },
+  resetPasswordOTPSentAt:{
+    type:Date
   },
   resetPasswordOTPAttempt:{
     type:Number,
