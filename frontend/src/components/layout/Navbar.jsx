@@ -1,90 +1,89 @@
-import { useState } from "react";
-import {
-  Search,
-  Plus,
-  Bell,
-  ChevronDown,
-  Github,
-} from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../../context/ThemeContext";
 
-const navItems = ["Dashboard", "Projects", "Issues"];
+const navLinks = [
+  { name: "Features", path: "/features" },
+  { name: "Docs", path: "/docs" },
+  { name: "Pricing", path: "/pricing" },
+  { name: "Blog", path: "/blog" },
+];
 
-export default function Navbar() {
-  const [active, setActive] = useState("Dashboard");
+const Navbar = () => {
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <nav className="w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="flex h-16 items-center justify-between gap-4">
+    <nav className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex h-16 items-center justify-between">
 
-          {/* Left */}
-          <div className="flex items-center gap-6">
-            <Github className="h-7 w-7 text-slate-900 dark:text-white" />
+          {/* Logo */}
+          <NavLink
+            to="/"
+            className="text-xl font-bold tracking-tight text-gray-900 dark:text-white"
+          >
+            DPaaS
+          </NavLink>``
 
-            {navItems.map((item) => (
-              <button
-                key={item}
-                onClick={() => setActive(item)}
-                className={`relative text-sm font-medium transition
-                  ${
-                    active === item
-                      ? "text-slate-900 dark:text-white"
-                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                  }
-                `}
+          {/* Nav Links */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={({ isActive }) =>
+                  `relative text-sm font-medium transition
+                   ${
+                     isActive
+                       ? "text-gray-900 dark:text-white"
+                       : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                   }`
+                }
               >
-                {item}
-
-                {/* Active underline */}
-                {active === item && (
-                  <span className="absolute -bottom-4 left-0 h-0.5 w-full bg-indigo-600 rounded-full" />
+                {({ isActive }) => (
+                  <>
+                    {link.name}
+                    {isActive && (
+                      <span className="absolute -bottom-1 left-0 h-0.5 w-full bg-black dark:bg-white rounded-full" />
+                    )}
+                  </>
                 )}
-              </button>
+              </NavLink>
             ))}
           </div>
 
-          {/* Search */}
-          <div className="flex flex-1 justify-center">
-            <div className="relative w-full max-w-md group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition" />
-              <input
-                type="text"
-                placeholder="Search or jump to..."
-                className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 py-2 pl-9 pr-12 text-sm text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 border rounded px-1.5 py-0.5 group-focus-within:border-indigo-500 transition">
-                /
-              </span>
-            </div>
-          </div>
-
-          {/* Right */}
+          {/* Right Actions */}
           <div className="flex items-center gap-4">
 
-            {/* Create */}
-            <button className="flex items-center gap-1 rounded-md px-2 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition">
-              <Plus size={18} />
-              <ChevronDown size={14} />
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="rounded-full p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
-            {/* Notifications */}
-            <button className="relative rounded-md p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition">
-              <Bell size={18} />
-              <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500" />
-            </button>
+            {/* Auth */}
+            <NavLink
+              to="/login"
+              className="hidden sm:inline-block text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+            >
+              Sign in
+            </NavLink>
 
-            {/* Avatar */}
-            <button className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-              <img
-                src="https://avatars.githubusercontent.com/u/1?v=4"
-                alt="avatar"
-                className="h-8 w-8 rounded-full"
-              />
-              <ChevronDown size={14} className="text-slate-500" />
-            </button>
+            {/* Black Primary Button */}
+            <NavLink
+              to="/signup"
+              className="rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition"
+            >
+              Get Started
+            </NavLink>
           </div>
         </div>
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;
