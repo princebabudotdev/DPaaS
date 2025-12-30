@@ -2,6 +2,7 @@ import express from "express";
 import http from "http";
 import CookieParser from "cookie-parser";
 import helmet from "helmet";
+import cors from 'cors'
 
 // import passport from "passport";
 import passport from './config/passport.js'
@@ -19,6 +20,11 @@ app.use(CookieParser());
 app.use(helmet());
 app.use(generalRateLimiter);
 app.use(passport.initialize());
+
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
 
 // route handlers can be added here
 import authRoutes from "./modules/auth/auth.route.js";
