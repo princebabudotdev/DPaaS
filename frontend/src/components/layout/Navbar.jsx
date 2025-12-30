@@ -23,21 +23,20 @@ const Navbar = () => {
             className="text-xl font-bold tracking-tight text-gray-900 dark:text-white"
           >
             DPaaS
-          </NavLink>``
+          </NavLink>
 
           {/* Nav Links */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-2">
             {navLinks.map((link) => (
               <NavLink
                 key={link.name}
                 to={link.path}
                 className={({ isActive }) =>
                   `relative text-sm font-medium transition
-                   ${
-                     isActive
-                       ? "text-gray-900 dark:text-white"
-                       : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                   }`
+                   ${isActive
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-slate-700 px-3 py-1 rounded-md dark:text-gray-400 dark:hover:text-white"
+                  }`
                 }
               >
                 {({ isActive }) => (

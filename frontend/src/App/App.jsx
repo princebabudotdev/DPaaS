@@ -6,9 +6,9 @@ import Popup from '../components/layout/Popup'
 const App = () => {
   IndexRoute
   return (
-    <div className='h-screen w-screen bg-white text-slate-950 dark:bg-slate-900 text-white'>
+    <div className='min-h-screen w-full  bg-white text-slate-950 dark:bg-slate-900 text-white overflow-x-hidden'>
       <Navbar/>
-      <Popup/>
+      {/* <Popup/> */}
       <IndexRoute/>
     </div>
   )
