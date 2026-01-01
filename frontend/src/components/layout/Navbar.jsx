@@ -1,118 +1,212 @@
-import { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
+import { Sun, Moon, RotateCcw, Search } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
-import Switch from "../ui/ToogleTheme";
 
-const navLinks = [
-  { name: "Dashboard", path: "/dashboard" },
-  { name: "Projects", path: "/projects" },
-  { name: "Docs", path: "/docs" },
-  { name: "Pricing", path: "/pricing" },
+import {
+  Bell,
+  User,
+  LayoutDashboard,
+  Palette,
+  Github,
+  BarChart3,
+  Shield,
+  FileText,
+  Settings,
+  Globe,
+} from "lucide-react";
+
+export const dpaasFeatures = [
+  {
+    name: "Dashboard",
+    description: "Overview of portfolio status, sync state, and activity",
+    icon: LayoutDashboard,
+    path: "/dashboard",
+  },
+  {
+    name: "My Portfolio",
+    description: "View and manage your public developer portfolio",
+    icon: Globe,
+    path: "/portfolio/me",
+  },
+  {
+    name: "Portfolio Customization",
+    description: "Themes, layout, sections, and branding options",
+    icon: Palette,
+    path: "/portfolio/themes",
+  },
+  {
+    name: "GitHub Integration",
+    description: "Connect and sync repositories & contributions",
+    icon: Github,
+    path: "/github/connect",
+  },
+  {
+    name: "Analytics",
+    description: "Track visitors, views, and engagement",
+    icon: BarChart3,
+    path: "/analytics",
+  },
+  {
+    name: "Notifications",
+    description: "Updates about sync, views, and platform changes",
+    icon: Bell,
+    path: "/notifications",
+  },
+  {
+    name: "Profile Settings",
+    description: "Update personal info, bio, skills, and links",
+    icon: User,
+    path: "/settings/profile",
+  },
+  {
+    name: "Security & Auth",
+    description: "Manage password, OAuth, and sessions",
+    icon: Shield,
+    path: "/settings/security",
+  },
+  {
+    name: "Docs & API",
+    description: "Platform documentation and developer APIs",
+    icon: FileText,
+    path: "/docs",
+  },
+  {
+    name: "Account Settings",
+    description: "Plans, billing, and account preferences",
+    icon: Settings,
+    path: "/settings",
+  },
 ];
 
-const Navbar = ({ user }) => {
-  const [open, setOpen] = useState(false);
-  const { theme } = useTheme();
+const Navbar = () => {
+  const { theme, toggleTheme } = useTheme();
+
+  const navLinks = [
+    { name: "Features", path: "/features" },
+    { name: "Docs", path: "/docs" },
+    { name: "Pricing", path: "/pricing" },
+    { name: "Changelog", path: "/changelog" },
+    { name: "Blog", path: "/blog" },
+    { name: "About", path: "/about" },
+  ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 dark:bg-[#0F172A]/80 backdrop-blur border-b border-gray-200 dark:border-gray-800">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex h-16 items-center justify-between">
+    <nav
+      className="
+          w-full h-14 flex items-center gap-6 px-4
+        bg-[#f8fafc] dark:bg-[#010409]
+        border-b border-neutral-200 dark:border-neutral-800
+      "
+    >
+      {/* Logo */}
+      {/* <div className="text-lg font-semibold tracking-tight
+        text-neutral-900 dark:text-neutral-100">
+        <span className="text-indigo-600 dark:text-indigo-400">
+          DP
+        </span>
+        aaS
+      </div> */}
 
-          {/* Logo */}
-          <NavLink
-            to="/"
-            className="text-xl font-bold text-indigo-600"
-          >
-            DPaaS
-          </NavLink>
+      {/* Search */}
+      <div className="flex-1 max-w-2xl">
+        <div className="relative">
+          <Search
+            size={16}
+            className="
+              absolute left-3 top-1/2 -translate-y-1/2
+              text-neutral-500 dark:text-neutral-400
+            "
+          />
+          <input
+            type="text"
+            placeholder="Search docs, features, blogs…"
+            className="
+              w-full h-9 pl-9 pr-4 rounded-md text-sm
+              bg-white dark:bg-[#0d1117]
+              border border-neutral-300 dark:border-neutral-700
+              text-neutral-900 dark:text-neutral-100
+              placeholder-neutral-400 dark:placeholder-neutral-500
+              focus:outline-none focus:ring-2
+              focus:ring-indigo-500/40 dark:focus:ring-indigo-400/40
+            "
+          />
+        </div>
+      </div>
 
-          {/* Nav Links */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map(({ name, path }) => (
-              <NavLink
-                key={name}
-                to={path}
-                className={({ isActive }) =>
-                  `relative text-sm font-medium transition-colors
-                   ${
-                     isActive
-                       ? "text-indigo-600 dark:text-indigo-400"
-                       : "text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400"
-                   }
-                   after:absolute after:left-0 after:-bottom-1 after:h-[2px]
-                   after:bg-indigo-600 after:transition-all
-                   ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}`
-                }
-              >
-                {name}
-              </NavLink>
-            ))}
-          </div>
-
-          {/* Right Section */}
-          <div className="flex items-center gap-4">
-
-            {/* Theme Toggle */}
-            <Switch />
-
-            {/* Auth / Profile */}
-            {!user ? (
-              <>
-                <NavLink
-                  to="/login"
-                  className="text-sm text-gray-700 dark:text-gray-300 hover:text-indigo-600"
+      {/* Right */}
+      <div className="flex items-center gap-2">
+        {/* Nav links */}
+        <div className="hidden md:flex items-center gap-3">
+          {navLinks.map((item) => (
+            <NavLink key={item.path} to={item.path}>
+              {({ isActive }) => (
+                <span
+                  className="
+                    group relative px-2 py-1 text-sm font-medium transition
+                    text-neutral-600 hover:text-neutral-900
+                    dark:text-neutral-400 dark:hover:text-white
+                  "
                 >
-                  Login
-                </NavLink>
+                  {item.name}
+                  <span
+                    className={`
+                      absolute left-0 -bottom-0.5 h-[1.5px] w-full
+                      bg-indigo-600 dark:bg-indigo-400
+                      transform transition-transform duration-300
+                      ${
+                        isActive
+                          ? "scale-x-100"
+                          : "scale-x-0 group-hover:scale-x-100"
+                      }
+                      origin-left
+                    `}
+                  />
+                </span>
+              )}
+            </NavLink>
+          ))}
+        </div>
 
-                <NavLink
-                  to="/register"
-                  className="rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
-                >
-                  Sign Up
-                </NavLink>
-              </>
-            ) : (
-              <div className="relative">
-                <button
-                  onClick={() => setOpen(!open)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-white font-semibold"
-                >
-                  {user.name.charAt(0).toUpperCase()}
-                </button>
+        {/* Refresh */}
+        <button
+          className="
+            p-2 rounded-md transition
+            text-neutral-600 hover:text-neutral-900
+            dark:text-neutral-400 dark:hover:text-white
+            hover:bg-neutral-200 dark:hover:bg-neutral-800
+          "
+          title="Refresh"
+          onClick={() => window.location.reload()}
+        >
+          <RotateCcw size={16} />
+        </button>
 
-                {open && (
-                  <div className="absolute right-0 mt-2 w-44 rounded-lg bg-white dark:bg-[#020617] shadow-lg border border-gray-200 dark:border-gray-800">
-                    <NavLink
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      Profile
-                    </NavLink>
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className="
+            p-2 rounded-md transition
+            text-neutral-600 hover:text-neutral-900
+            dark:text-neutral-400 dark:hover:text-white
+            hover:bg-neutral-200 dark:hover:bg-neutral-800
+          "
+          title="Toggle theme"
+        >
+          {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
 
-                    <NavLink
-                      to="/settings"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      Settings
-                    </NavLink>
-
-                    <NavLink
-                      to="/billing"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      Billing
-                    </NavLink>
-
-                    <button className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10">
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+        {/* Profile */}
+        <div
+          className="
+          ml-1 w-8 h-8 rounded-full
+          bg-neutral-300 dark:bg-neutral-700
+          flex items-center justify-center
+          text-xs font-semibold
+          text-neutral-900 dark:text-neutral-100
+        "
+        >
+          P
         </div>
       </div>
     </nav>

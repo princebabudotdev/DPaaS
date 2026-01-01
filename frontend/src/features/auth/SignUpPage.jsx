@@ -55,138 +55,203 @@ export default function Signup() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-950 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 shadow-xl p-8">
-        {/* Header */}
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white text-center">
-          Create account
-        </h1>
-        <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
-          Sign up to get started
-        </p>
+return (
+  <div className="min-h-screen flex items-center justify-center bg-[#0D1117] px-4">
+    <div
+      className="
+        w-full max-w-md rounded-xl
+        bg-[#010409]
+        border border-neutral-800
+        p-8
+      "
+    >
+      {/* Header */}
+      <h1 className="text-2xl font-semibold text-neutral-100 text-center">
+        Create account
+      </h1>
+      <p className="mt-2 text-center text-sm text-neutral-400">
+        Sign up to get started with DPaaS
+      </p>
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit}>
-          {/* Full Name */}
-          <div className="mt-8 relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <input
-              type="text"
-              name="fullname"
-              value={formData.fullname}
-              onChange={handleOnChange}
-              placeholder="Full name"
-              required
-              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent py-3 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Username */}
-          <div className="mt-4 relative">
-            <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleOnChange}
-              placeholder="Username"
-              required
-              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent py-3 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Email */}
-          <div className="mt-4 relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleOnChange}
-              placeholder="Email address"
-              required
-              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent py-3 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Password */}
-          <div className="mt-4 relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              onChange={handleOnChange}
-              placeholder="Password"
-              required
-              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-transparent py-3 pl-10 pr-10 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white"
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-
-          {/* Sign Up Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-8 w-full rounded-xl bg-indigo-600 py-3 text-sm font-semibold text-white hover:bg-indigo-700 transition disabled:opacity-70"
-          >
-            {loading ? (
-              <div className="h-full w-full flex items-center justify-center">
-                <div className="h-5 w-5 rounded-full border-2 border-t-transparent animate-spin duration-1000 ease-linear"></div>
-              </div>
-            ) : (
-              "Create account"
-            )}
-          </button>
-        </form>
-
-        {/* Divider */}
-        <div className="my-6 flex items-center gap-4">
-          <div className="h-px w-full bg-slate-200 dark:bg-slate-700" />
-          <span className="text-xs text-slate-500">OR</span>
-          <div className="h-px w-full bg-slate-200 dark:bg-slate-700" />
+      {/* FORM */}
+      <form onSubmit={handleSubmit} className="mt-8">
+        {/* Full Name */}
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500" />
+          <input
+            type="text"
+            name="fullname"
+            value={formData.fullname}
+            onChange={handleOnChange}
+            placeholder="Full name"
+            required
+            className="
+              w-full rounded-md
+              border border-neutral-800
+              bg-[#0D1117]
+              py-3 pl-10 pr-4 text-sm
+              text-neutral-100
+              placeholder:text-neutral-500
+              focus:outline-none
+              focus:ring-2 focus:ring-indigo-500/40
+            "
+          />
         </div>
 
-        {/* Google */}
-        <button
-          onClick={AuthApis.LoginWithGoogle}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 dark:border-slate-700 py-3 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="h-5 w-5"
+        {/* Username */}
+        <div className="mt-4 relative">
+          <AtSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500" />
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleOnChange}
+            placeholder="Username"
+            required
+            className="
+              w-full rounded-md
+              border border-neutral-800
+              bg-[#0D1117]
+              py-3 pl-10 pr-4 text-sm
+              text-neutral-100
+              placeholder:text-neutral-500
+              focus:outline-none
+              focus:ring-2 focus:ring-indigo-500/40
+            "
           />
-          Continue with Google
-        </button>
+        </div>
 
-        {/* GitHub */}
-        <button
-          onClick={AuthApis.LoginWithGithub}
-          className="mt-3 flex w-full items-center justify-center gap-3 rounded-xl bg-slate-900 py-3 text-sm font-medium text-white hover:bg-slate-800 transition"
-        >
-          <Github size={18} />
-          Continue with GitHub
-        </button>
+        {/* Email */}
+        <div className="mt-4 relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500" />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleOnChange}
+            placeholder="Email address"
+            required
+            className="
+              w-full rounded-md
+              border border-neutral-800
+              bg-[#0D1117]
+              py-3 pl-10 pr-4 text-sm
+              text-neutral-100
+              placeholder:text-neutral-500
+              focus:outline-none
+              focus:ring-2 focus:ring-indigo-500/40
+            "
+          />
+        </div>
 
-        {/* Footer */}
-        <p className="mt-6 text-center text-xs text-slate-500">
-          Already have an account?{" "}
-          <NavLink
-            to="/login"
-            className="text-indigo-600 hover:underline dark:text-indigo-400"
+        {/* Password */}
+        <div className="mt-4 relative">
+          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500" />
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={formData.password}
+            onChange={handleOnChange}
+            placeholder="Password"
+            required
+            className="
+              w-full rounded-md
+              border border-neutral-800
+              bg-[#0D1117]
+              py-3 pl-10 pr-10 text-sm
+              text-neutral-100
+              placeholder:text-neutral-500
+              focus:outline-none
+              focus:ring-2 focus:ring-indigo-500/40
+            "
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="
+              absolute right-3 top-1/2 -translate-y-1/2
+              text-neutral-500 hover:text-neutral-300
+            "
           >
-            Sign in
-          </NavLink>
-        </p>
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+
+        {/* Sign Up Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="
+            mt-8 w-full rounded-md
+            bg-indigo-600 py-3
+            text-sm font-semibold text-white
+            hover:bg-indigo-500
+            transition disabled:opacity-60
+          "
+        >
+          {loading ? (
+            <div className="flex justify-center">
+              <div className="h-5 w-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+            </div>
+          ) : (
+            "Create account"
+          )}
+        </button>
+      </form>
+
+      {/* Divider */}
+      <div className="my-6 flex items-center gap-4">
+        <div className="h-px w-full bg-neutral-800" />
+        <span className="text-xs text-neutral-500">OR</span>
+        <div className="h-px w-full bg-neutral-800" />
       </div>
+
+      {/* Google */}
+      <button
+        onClick={AuthApis.LoginWithGoogle}
+        className="
+          flex w-full items-center justify-center gap-3
+          rounded-md border border-neutral-800
+          py-3 text-sm font-medium
+          text-neutral-200
+          hover:bg-neutral-900 transition
+        "
+      >
+        <img
+          src="https://www.svgrepo.com/show/475656/google-color.svg"
+          alt="Google"
+          className="h-5 w-5"
+        />
+        Continue with Google
+      </button>
+
+      {/* GitHub */}
+      <button
+        onClick={AuthApis.LoginWithGithub}
+        className="
+          mt-3 flex w-full items-center justify-center gap-3
+          rounded-md bg-neutral-900
+          py-3 text-sm font-medium
+          text-neutral-100
+          hover:bg-neutral-800 transition
+        "
+      >
+        <Github size={18} />
+        Continue with GitHub
+      </button>
+
+      {/* Footer */}
+      <p className="mt-6 text-center text-xs text-neutral-500">
+        Already have an account?{" "}
+        <NavLink
+          to="/login"
+          className="text-indigo-400 hover:underline"
+        >
+          Sign in
+        </NavLink>
+      </p>
     </div>
-  );
+  </div>
+);
+
 }
