@@ -34,10 +34,32 @@ const registerUser = async (userdata) => {
   await sendEmail({
     to: newUser.email,
     subject: "Welcome to DPaaS 🎉",
-    html: `
-      <h2>Welcome ${newUser.fullname}</h2>
-      <p>Your account has been created successfully.</p>
-    `,
+    html:`
+  <div style="font-family: Arial, Helvetica, sans-serif; color:#111827;">
+    
+    <h2 style="margin-bottom:8px;">
+      Welcome ${newUser.fullname} 👋
+    </h2>
+
+    <p style="font-size:15px; line-height:1.6; color:#374151;">
+      Your account has been created successfully on <strong>DevFolioX</strong>.
+    </p>
+
+    <p style="font-size:14px; color:#374151;">
+      <strong>Registered Email:</strong> ${newUser.email}
+    </p>
+
+    <p style="font-size:14px; color:#6b7280; margin-top:16px;">
+      You can now log in and start building your developer portfolio.
+    </p>
+
+    <p style="font-size:14px; color:#6b7280;">
+      — Team DevFolioX
+    </p>
+
+  </div>
+`
+,
   });
 
   newUser.password = undefined; // Hide password before returning

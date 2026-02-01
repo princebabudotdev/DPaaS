@@ -2,10 +2,10 @@ import express from "express";
 import http from "http";
 import CookieParser from "cookie-parser";
 import helmet from "helmet";
-import cors from 'cors'
+import cors from "cors";
 
 // import passport from "passport";
-import passport from './config/passport.js'
+import passport from "./config/passport.js";
 
 // general-rate-limter
 import { generalRateLimiter } from "./middlewares/rateLimter.Middleware.js";
@@ -21,16 +21,26 @@ app.use(helmet());
 app.use(generalRateLimiter);
 app.use(passport.initialize());
 
-app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
-}))
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 // route handlers can be added here
 import authRoutes from "./modules/auth/auth.route.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 
-app.use("/api/auth",  authRoutes);
+import userRoute from './modules/user/user.route.js'
+
+// auth routes
+app.use("/api/auth", authRoutes);
+
+// user routes
+app.use('/api/users', userRoute);
+
+
 
 // error middleware
 app.use(errorMiddleware);

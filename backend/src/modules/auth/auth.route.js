@@ -31,7 +31,7 @@ router
   .put(
     validate(authValidator.forgotPasswordValidator),
     protect,
-    authController.forgotPassword
+    authController.forgotPassword,
   );
 
 router.route("/updateProfile").put(protect, authController.updateProfile);
@@ -44,7 +44,7 @@ router
   .route("/resetPassword/verifyOtp")
   .post(
     validate(authValidator.resetPasswordValidator),
-    authController.resetPasswordVerifyOtp
+    authController.resetPasswordVerifyOtp,
   );
 
 // google auth routes here
@@ -52,7 +52,7 @@ router
 router.route("/google").get(
   passport.authenticate("google", {
     scope: ["profile", "email"],
-  })
+  }),
 );
 
 router.route("/google/callback").get(
@@ -61,7 +61,7 @@ router.route("/google/callback").get(
     failureRedirect: "/login-failed", //Redirect to failure page if authentication fails
     session: false,
   }),
-  authController.googleCallback
+  authController.googleCallback,
 );
 
 // github OAuth routes here
@@ -75,7 +75,7 @@ router.route("/github/callback").get(
     session: false,
     failureRedirect: "/login-failed",
   }),
-  authController.githubCallback
+  authController.githubCallback,
 );
 
 export default router;
