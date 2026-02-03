@@ -32,15 +32,17 @@ app.use(
 import authRoutes from "./modules/auth/auth.route.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 
-import userRoute from './modules/user/user.route.js'
+import userRoute from "./modules/user/user.route.js";
+import postRoute from "./modules/posts/post.route.js";
 
 // auth routes
 app.use("/api/auth", authRoutes);
 
 // user routes
-app.use('/api/users', userRoute);
+app.use("/api/users", userRoute);
 
-
+// post routes
+app.use("/api/posts", postRoute);
 
 // error middleware
 app.use(errorMiddleware);
