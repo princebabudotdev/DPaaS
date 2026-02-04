@@ -1,7 +1,5 @@
 import { body } from "express-validator";
 
-
-
 const createPostValidator = [
   body("title")
     .notEmpty()
@@ -17,9 +15,22 @@ const createPostValidator = [
     .isIn(["QUESTION", "DISCUSSION", "RESOURCE"])
     .withMessage("Invalid post type"),
 
-//   body("file").optional().isURL().withMessage("File must be a valid URL"),
+  //   body("file").optional().isURL().withMessage("File must be a valid URL"),
+];
+
+const updatePostValidator = [
+  body("title")
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage("Title can be maximum 100 characters long"),
+  body("content").optional(),
+  body("type")
+    .optional()
+    .isIn(["QUESTION", "DISCUSSION", "RESOURCE"])
+    .withMessage("Invalid post type"),
 ];
 
 export default {
   createPostValidator,
+  updatePostValidator,
 };

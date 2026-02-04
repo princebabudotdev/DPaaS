@@ -10,8 +10,6 @@ const createPostService = async (postdata) => {
 
   let result = null;
 
-
-
   if (postdata.file) {
     result = await uploadImage(postdata.file?.buffer, `${v4()}`);
   }
@@ -24,10 +22,9 @@ const createPostService = async (postdata) => {
   });
 };
 
-
 const getAllPostsService = async () => {
   return postDao.getAllPostsDao();
-}
+};
 
 const singlePostService = async (postId) => {
   const post = await postDao.findByIdDao(postId);
@@ -35,10 +32,54 @@ const singlePostService = async (postId) => {
     throw new ApiError(404, "Post not found");
   }
   return post;
-}
+};
+
+const updatePostService = async (postId, { title, content, type }, userId) => {
+  const post = await postDao.findByIdDao(postId);
+
+  if (!post || post.isDeleted) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  if (post.authorId.toString() !== userId.toString()) {
+    throw new ApiError(403, "You are not authorized to update this post");
+  }
+
+  if (type && !["QUESTION", "DISCUSSION", "RESOURCE"].includes(type)) {
+    throw new ApiError(400, "Invalid post type");
+  }
+
+  post.title = title || post.title;
+  post.content = content || post.content;
+  post.type = type || post.type;
+  post.updatedAt = new Date();
+
+  await post.save();
+  return post;
+};
+
+const deletePostService = async (postId, userId) => {
+  const post = await postDao.findOneDao(postId);
+
+  if (!post || post.isDeleted) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  if (post.authorId.toString() !== userId.toString()) {
+    throw new ApiError(403, "You are not authorized to delete this post");
+  }
+
+  post.isDeleted = true;
+  post.deletedAt = new Date();
+
+  await post.save();
+  return;
+};
 
 export default {
   createPostService,
   getAllPostsService,
-  singlePostService
+  singlePostService,
+  updatePostService,
+  deletePostService,
 };

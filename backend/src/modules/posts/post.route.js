@@ -14,6 +14,7 @@ import postValidator from "./post.validator.js";
 import {
   createPostLimiter,
   postsBaseLimiter,
+  updatePostLimiter,
 } from "../../middlewares/rateLimter.Middleware.js";
 
 // Define routes here
@@ -34,5 +35,18 @@ router.route("/").get(protect, postController.getAllPosts);
 // get single post route
 
 router.route("/:postId").get(protect, postController.singlePost);
+
+// update post route
+
+router.route("/update/:postId").put(
+  protect, // 1️⃣ auth
+  updatePostLimiter, // rate limiter
+  validate(postValidator.updatePostValidator), // 3️⃣ validate parsed body
+  postController.updatePost, // 4️⃣ controller
+);
+
+// delete post route soft delete
+
+router.route("/delete/:postId").delete(protect, postController.deletePost);
 
 export default router;

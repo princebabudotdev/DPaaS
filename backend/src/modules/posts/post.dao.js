@@ -14,8 +14,16 @@ const findByIdDao = async (postId) => {
   return await PostModel.findById(postId);
 }
 
+const findOneDao = async (postId) => {
+  return await PostModel.findOne({
+    _id:postId,
+    isDeleted: false,
+  });
+}
+
 export default {
   createPostDao,
   getAllPostsDao,
-  findByIdDao
+  findByIdDao,
+  findOneDao,
 };
