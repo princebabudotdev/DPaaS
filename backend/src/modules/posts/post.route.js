@@ -49,4 +49,8 @@ router.route("/update/:postId").put(
 
 router.route("/delete/:postId").delete(protect, postController.deletePost);
 
+
+router.route("/visibility/:postId")
+.put(protect , postController.postVisibility );
+
 export default router;

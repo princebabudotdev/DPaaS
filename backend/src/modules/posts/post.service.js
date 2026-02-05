@@ -76,10 +76,36 @@ const deletePostService = async (postId, userId) => {
   return;
 };
 
+const postVisibilityService = async (postId, userId, visibility) => {
+  const post = await postDao.findOneDao(postId);
+
+  console.log(postId);
+
+  if (!post || post.isDeleted) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  if (post.authorId.toString() !== userId.toString()) {
+    throw new ApiError(
+      403,
+      "You are not authorized to change visibility of this post",
+    );
+  }
+
+  // logic to change visibility
+
+  post.visibility = visibility || post.visibility;
+
+  await post.save();
+
+  return post;
+};
+
 export default {
   createPostService,
   getAllPostsService,
   singlePostService,
   updatePostService,
   deletePostService,
+  postVisibilityService,
 };

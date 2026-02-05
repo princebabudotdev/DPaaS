@@ -124,10 +124,44 @@ const deletePost = asyncHandler(async (req, res) => {
   });
 });
 
+// post visibility controller
+
+const postVisibility = asyncHandler(async (req, res) => {
+  const { visibility } = req.body;
+  const { postId } = req.params;
+
+  const userId = req.user.id;
+
+
+  if(!req.user || !req.user.id){
+    throw new ApiError(401, "Unauthorized");
+  }
+
+  if (!postId) {
+    throw new ApiError(404, "Post not found");
+  }
+
+  if (!validMongooseId(postId)) {
+    throw new ApiError(400, "postId is invalid");
+  }
+
+  const updatedpost = await postService.postVisibilityService(
+    postId,
+    userId,
+    visibility,
+  );
+
+  return res.status(200).json({
+    status: "success",
+    data: updatedpost,
+  });
+});
+
 export default {
   createPost,
   getAllPosts,
   singlePost,
   updatePost,
   deletePost,
+  postVisibility,
 };

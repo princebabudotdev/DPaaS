@@ -68,6 +68,15 @@ const PostSchema = new mongoose.Schema(
       default: null,
     },
 
+    // post visibility
+
+    visibility: {
+      type: String,
+      enum: ["public", "followers", "private"],
+      default: "public",
+      index: true,
+    },
+
     // =====================
     // Comments (DERIVED DATA)
     // Actual comments live in Comment collection
