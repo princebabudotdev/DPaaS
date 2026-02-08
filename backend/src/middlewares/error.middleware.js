@@ -1,10 +1,9 @@
 import ApiError from "../utils/appError.js";
 
 const errorMiddleware = (err, req, res, next) => {
-  // create variable error
   let error = err;
 
-  // If the error is NOT our custom ApiError, convert it into ApiError.
+  // Normalize unknown errors
   if (!(error instanceof ApiError)) {
     error = new ApiError(
       error.statusCode || 500,
@@ -12,8 +11,10 @@ const errorMiddleware = (err, req, res, next) => {
     );
   }
 
+  const statusCode = error.statusCode || 500;
+
   const response = {
-    sucess: false,
+    success: false, // ✅ fixed typo
     message: error.message,
     ...(error.errors?.length && { errors: error.errors }),
     ...(process.env.NODE_ENV === "development" && {
@@ -21,8 +22,7 @@ const errorMiddleware = (err, req, res, next) => {
     }),
   };
 
-  // send response error
-  res.status(error.statusCode).json(response);
+  res.status(statusCode).json(response);
 };
 
 export default errorMiddleware;

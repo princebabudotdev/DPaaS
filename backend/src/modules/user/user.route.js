@@ -1,15 +1,18 @@
 import express from "express";
-const router = express.Router();
-
 import { protect } from "../../middlewares/auth.middleware.js";
 import userController from "./user.controller.js";
-import upload from "../../config/multer.config.js";
-import uploadImage from "../../utils/imageKit.js";
-
-// get profile
-router.route("/me").get(protect, userController.getMe);
+import { editProfileLimiter } from "../../middlewares/rateLimter.Middleware.js";
+import { validate } from "../../middlewares/validate.middleware.js";
+import userValidator from "./user.validator.js";
+const router = express.Router();
 
 router
-.route("update-ava")
+  .route("/update-profile")
+  .patch(
+    protect,
+    editProfileLimiter,
+    validate(userValidator.editProfileValidator),
+    userController.updateProfile,
+  );
 
 export default router;

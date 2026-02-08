@@ -3,6 +3,7 @@ import { generateOTP, hashOTP } from "../../utils/otp.js";
 import { sendEmail } from "../../utils/sendEmail.js";
 import authDao from "./auth.dao.js";
 import crypto from "crypto";
+import User from "./user.model.js";
 
 const registerUser = async (userdata) => {
   if (userdata.email) {
@@ -12,58 +13,28 @@ const registerUser = async (userdata) => {
     }
   }
 
-  const userPayLoad = {
-    fullname: userdata.fullname,
-    username: userdata.username,
-    email: userdata.email,
-    password: userdata.password,
-  };
+  // const userPayLoad = {
+  //   fullname: userdata.fullname,
+  //   username: userdata.username,
+  //   email: userdata.email,
+  //   password: userdata.password,
+  // };
 
-  // add only if present
+  // // add only if present
 
-  if (userdata.googleId) {
-    userPayLoad.googleId = userdata.googleId;
-  }
+  // if (userdata.googleId) {
+  //   userPayLoad.googleId = userdata.googleId;
+  // }
 
-  if (userdata.githubId) {
-    userPayLoad.githubId = userdata.githubId;
-  }
+  // if (userdata.githubId) {
+  //   userPayLoad.githubId = userdata.githubId;
+  // }
 
-  const newUser = await authDao.createUser(userPayLoad);
 
-  await sendEmail({
-    to: newUser.email,
-    subject: "Welcome to DPaaS 🎉",
-    html:`
-  <div style="font-family: Arial, Helvetica, sans-serif; color:#111827;">
-    
-    <h2 style="margin-bottom:8px;">
-      Welcome ${newUser.fullname} 👋
-    </h2>
+  const newUser = await User.create(userdata);
+ 
+  return newUser
 
-    <p style="font-size:15px; line-height:1.6; color:#374151;">
-      Your account has been created successfully on <strong>DevFolioX</strong>.
-    </p>
-
-    <p style="font-size:14px; color:#374151;">
-      <strong>Registered Email:</strong> ${newUser.email}
-    </p>
-
-    <p style="font-size:14px; color:#6b7280; margin-top:16px;">
-      You can now log in and start building your developer portfolio.
-    </p>
-
-    <p style="font-size:14px; color:#6b7280;">
-      — Team DevFolioX
-    </p>
-
-  </div>
-`
-,
-  });
-
-  newUser.password = undefined; // Hide password before returning
-  return newUser;
 };
 
 const loginUser = async (email, password) => {
@@ -72,8 +43,6 @@ const loginUser = async (email, password) => {
   }
 
   const user = await authDao.findByEmail(email);
-
-
 
   if (!user || !(await user.comparePassword(password))) {
     throw new ApiError(401, "Invalid email or password ");
@@ -105,18 +74,25 @@ const forgotPasswordUser = async (oldPassword, newPassword, email) => {
   return user;
 };
 
-const updateProfileUser = async ({ email, fullname, username, location , bio , skills , SocialLinks }) => {
+const updateProfileUser = async ({
+  email,
+  fullname,
+  username,
+  location,
+  bio,
+  skills,
+  SocialLinks,
+}) => {
   const user = await authDao.findByEmail(email);
   if (!user) throw new ApiError(404, "UsernotFound");
 
   user.username = username || user.username;
   user.fullname = fullname || user.fullname;
   user.location = location || user.location;
-  user.bio = bio || user.bio
-  user.SocialLinks = SocialLinks || user.SocialLinks
-  
+  user.bio = bio || user.bio;
+  user.SocialLinks = SocialLinks || user.SocialLinks;
 
- await user.save();
+  await user.save();
   user.password = undefined;
   return user;
 };
@@ -267,7 +243,6 @@ const resetPasswordVerifyOtpUser = async (email, otp, newPassword) => {
     message: "Password reset sucessfully please Login in DPaaS",
   };
 };
-
 
 export default {
   registerUser,

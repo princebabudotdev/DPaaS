@@ -1,17 +1,33 @@
-import ApiError from "../../utils/appError.js";
-import asyncHandler from "../../utils/asyncHandler.js";
+import asyncHandler from '../../utils/asyncHandler.js'
+import ApiError from '../../utils/appError.js'
+import userService from './user.service.js';
 
-const getMe = asyncHandler(async (req, res) => {
-  const user = req.user;
+const updateProfile = asyncHandler(async (req , res) => {
+    const {fullname , username , location , gender , bio} = req.body
 
-  if (!user) {
-    throw new ApiError(404, "User not found");
-  }
+    if(!req.user || !req.user.id){
+        throw new ApiError(401 , "Unauthorized");
+    }
 
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
-});
+    const userId = req.user?.id || null
 
-export default { getMe };
+    const user = await userService.updateProfileService({fullname , username , location , gender , bio} , userId);
+
+    if(!user){
+        throw new ApiError(404 , "User not found");
+    }
+
+    return res.status(200).json({
+        sucess:true,
+        message:"User updated sucessfully",
+        user
+    })
+
+
+
+})
+
+
+export default {
+    updateProfile
+}

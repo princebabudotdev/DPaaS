@@ -31,7 +31,7 @@ const register = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: config.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 15 * 60 * 1000, // 15 minutes
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 15 minutes
   });
 
   res.status(201).json({
@@ -67,13 +67,11 @@ const login = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: config.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 15 * 60 * 1000, // 15 minutes
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 15 minutes
   });
 
   res.status(200).json({
-    user,
-    refreshToken,
-    accessToken,
+    message:"User Logged in succesfully"
   });
 });
 
@@ -234,6 +232,14 @@ const resetPasswordVerifyOtp = asyncHandler(async (req, res) => {
 
 });
 
+const testd = asyncHandler(async (req, res) => {
+  res.json({
+    data: req.user
+  });
+});
+
+
+
 export default {
   register,
   login,
@@ -242,5 +248,6 @@ export default {
   googleCallback,
   githubCallback,
   forgotPasswordSendOTP,
-  resetPasswordVerifyOtp
+  resetPasswordVerifyOtp,
+  testd
 };

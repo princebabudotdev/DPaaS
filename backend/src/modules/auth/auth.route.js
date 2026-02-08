@@ -78,4 +78,6 @@ router.route("/github/callback").get(
   authController.githubCallback,
 );
 
+router.route("/testd").post(protect , authController.testd);
+
 export default router;

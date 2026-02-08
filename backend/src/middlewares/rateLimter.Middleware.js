@@ -41,3 +41,15 @@ export const updatePostLimiter = rateLimit({
     message: "Post update limit reached. Try again later.",
   },
 });
+
+
+export const editProfileLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // max 10 profile updates per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many profile update attempts. Please try again later.",
+  },
+});
